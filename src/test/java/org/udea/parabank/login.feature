@@ -56,12 +56,12 @@ Feature: Login to app contact
     And request { email: 'invalidemail', password: #(validPassword) }
     When method POST
     Then status 400
-    And match response.message contains 'email'  # depende del backend
+    And match response.message contains 'email'
 
   Scenario: Campos vacíos (email y password requeridos)
     Given path '/users/login'
     And request { email: '', password: '' }
     When method POST
     Then status 400
-    And match response.message contains 'required'  # depende del backend
+    And match response.message contains 'required' 
 
