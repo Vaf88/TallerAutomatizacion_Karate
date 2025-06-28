@@ -6,8 +6,7 @@ Feature: Crear contacto en app contact
     * header Accept = 'application/json'
     * def emailContacto = 'jdoe@fake.com'
     * def loginPayload = { email: 'valeria@gmail.com', password: 'Negro88Teamo' }
-
-  Scenario: Login exitoso y guardar token
+    # Login y obtención del token
     Given path '/users/login'
     And request loginPayload
     When method POST
@@ -31,7 +30,6 @@ Feature: Crear contacto en app contact
       "country": "USA"
     }
     """
-    * call read('classpath:appcontact_createcontact.feature@appcontact_createcontact')  // para usar authToken
     Given path '/contacts'
     And header Authorization = 'Bearer ' + authToken
     And request contactData
@@ -39,7 +37,6 @@ Feature: Crear contacto en app contact
     Then status 201
 
   Scenario: Validar que contacto creado aparece en lista
-    * call read('classpath:appcontact_createcontact.feature@appcontact_createcontact')
     Given path '/contacts'
     And header Authorization = 'Bearer ' + authToken
     When method GET
@@ -47,7 +44,6 @@ Feature: Crear contacto en app contact
     And match response[*].email contains emailContacto
 
   Scenario: Error al crear contacto con email duplicado
-    * call read('classpath:appcontact_createcontact.feature@appcontact_createcontact')
     * def duplicatedContact =
     """
     {
@@ -60,10 +56,9 @@ Feature: Crear contacto en app contact
     And request duplicatedContact
     When method POST
     Then status 400
-    And match response.message contains 'email'  # o el mensaje real que devuelva el backend
+    And match response.message contains 'email'
 
   Scenario: Error al crear contacto sin campos obligatorios (firstName)
-    * call read('classpath:appcontact_createcontact.feature@appcontact_createcontact')
     * def invalidContact =
     """
     {
@@ -76,5 +71,5 @@ Feature: Crear contacto en app contact
     And request invalidContact
     When method POST
     Then status 400
-    And match response.message contains 'firstName'  # o mensaje esperado
+    And match response.message contains 'firstName'
 
